@@ -1,0 +1,1 @@
+{"uuid": "7e72a72b-3dca-4fc4-a99f-41ad98d14818", "children": ["136a39c9-8c68-4433-bcc8-1f4a2dfc78b1"], "befores": [{"name": "taxi_order_created", "status": "passed", "start": 1755620337775, "stop": 1755620337933}], "afters": [{"name": "taxi_order_created::0", "status": "passed", "start": 1755620366960, "stop": 1755620366960}], "start": 1755620337775, "stop": 1755620366960}

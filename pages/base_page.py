@@ -24,9 +24,10 @@ class BasePage:
         element.click()
         return self
 
-    def is_element_visible(self, locator):
+    def is_element_visible(self, locator, timeout=10):
         try:
-            return self.wait.until(EC.visibility_of_element_located(locator)).is_displayed()
+            wait = WebDriverWait(self.driver, timeout)
+            return wait.until(EC.visibility_of_element_located(locator)).is_displayed()
         except:
             return False
 
@@ -54,3 +55,6 @@ class BasePage:
             element
         )
         return self
+
+    def is_element_selected(self, locator):
+        return self.wait.until(EC.presence_of_element_located(locator)).is_selected()

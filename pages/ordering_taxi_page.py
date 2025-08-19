@@ -4,7 +4,7 @@ from locators.ordering_taxi_locators import OrderingTaxiLocators
 from locators.drawing_route_locators import DrawingRouteLocators
 from pages.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as EC
-import time
+
 
 class OrderingTaxiPage(BasePage):
     @property
@@ -65,7 +65,7 @@ class OrderingTaxiPage(BasePage):
         return self.wait.until(EC.visibility_of_element_located(OrderingTaxiLocators.TOOLTIP_CONTENT)).text.strip()
 
     def verify_tariff_description(self, tariff_name):
-        expected = OrderingTaxiLocators.TARIFF_DESCRIPTIONS[tariff_name]
+        expected = OrderingTaxiLocators.EXPECTED_TEXTS[tariff_name]
         actual = self.get_tooltip_text()
         assert expected in actual, (
             f"Неверное описание тарифа '{tariff_name}'\n"
@@ -165,3 +165,40 @@ class OrderingTaxiPage(BasePage):
         }
         attr_name = f"{name_mapping[tariff_name]}_{element_type.upper()}"
         return getattr(OrderingTaxiLocators, attr_name)
+
+    def is_phone_field_visible(self):
+        return self.is_element_visible(OrderingTaxiLocators.PHONE_LABEL)
+
+    def is_payment_method_visible(self):
+        return self.is_element_visible(OrderingTaxiLocators.PAYMENT_METHOD_LABEL)
+
+    def is_driver_comment_visible(self):
+        return self.is_element_visible(OrderingTaxiLocators.DRIVER_COMMENT_LABEL)
+
+    def is_requirements_visible(self):
+        return self.is_element_visible(OrderingTaxiLocators.REQUIREMENTS_HEADER)
+
+    def toggle_laptop_table(self, enable=True):
+        current_state = self.is_element_selected(OrderingTaxiLocators.TOGGLE_SWITCH)
+        if current_state != enable:
+            self.click_element(OrderingTaxiLocators.TOGGLE_SWITCH)
+
+    def confirm_order(self):
+        self.click_element(OrderingTaxiLocators.SUBMIT_BUTTON)
+
+    def is_waiting_modal_visible(self):
+        return self.is_element_visible(OrderingTaxiLocators.CLOSE_BUTTON)
+
+    def scroll_and_click_requirements(self):
+        requirements_button = self.wait.until(EC.element_to_be_clickable(OrderingTaxiLocators.REQUIREMENTS_HEADER))
+        self.scroll_to_element(requirements_button)
+        self.click_element(OrderingTaxiLocators.REQUIREMENTS_HEADER)
+        return self
+
+    def wait_for_order_number(self, timeout=45):
+        return self.is_element_visible(OrderingTaxiLocators.ORDER_NUMBER)
+
+    def extract_price_value(self, price_text):
+        import re
+        match = re.search(r'(\d+)', price_text)
+        return match.group(1) if match else None
